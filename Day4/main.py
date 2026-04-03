@@ -4,10 +4,10 @@ from PIL import Image
 import mediapipe as mp
 
 
-# Read Image
-output_dir = "./Output"
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
+# # Read Image
+# output_dir = "./Output"
+# if not os.path.exists(output_dir):
+#     os.makedirs(output_dir)
 
 
 Image_path = "Dataset/rohit.jpg"
