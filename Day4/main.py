@@ -9,6 +9,7 @@ output_dir = "./Output"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
+
 Image_path = "Dataset/rohit.jpg"
 img = cv2.imread(Image_path)
 H, W, _ = img.shape
