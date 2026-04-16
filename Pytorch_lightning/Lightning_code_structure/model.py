@@ -28,15 +28,26 @@ class NN(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch
         loss, scores, y = self._common_step(batch, batch_idx)
-        accuracy = self.accuracy(scores, y)
-        f1_score = self.f1_score(scores, y)
-        self.log_dict({"train_loss": loss, "train_accuracy": accuracy, "train_f1_score": f1_score},
+        # accuracy = self.accuracy(scores, y)
+        # f1_score = self.f1_score(scores, y)
+        self.log_dict({"train_loss": loss}, #"train_accuracy": accuracy, "train_f1_score": f1_score
                       on_step=False, on_epoch=True, prog_bar=True)
         if batch_idx % 100 == 0:
             x = x[:8]
             grid = torchvision.utils.make_grid(x.view(-1, 1, 28, 28))
             self.logger.experiment.add_image("mnist_images", grid, self.global_step)
-        return loss
+
+        return {"loss": loss, "scores": scores, "y": y}
+    def training_epoch_end(self, outputs):
+        scores = torch.cat([x["scores"] for x in outputs])
+        y = torch.cat([x["y"] for x in outputs])
+        self.log_dict(
+            {
+                "train_acc": self.accuracy(scores, y),
+                "train_f1": self.f1_score(scores, y)
+            },
+            on_step=False, on_epoch=True, prog_bar=True
+        )
     def validation_step(self, batch, batch_idx):
         loss, scores, y = self._common_step(batch, batch_idx)
         self.log('val_loss', loss)

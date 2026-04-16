@@ -20,11 +20,11 @@ from pytorch_lightning.profilers import PyTorchProfiler
 
 
 if __name__ == "__main__":
-    logger = TensorBoardLogger("tb_logs", name="mnist_model_v0")  #class -- 8
-    profiler = PyTorchProfiler(
+    logger = TensorBoardLogger("tb_logs", name="mnist_model_v1")  #class -- 8
+    profiler = PyTorchProfiler( #class -- 9
         on_trace_ready = torch.profiler.tensorboard_trace_handler("tb_logs/profiler0"),
         schedule = torch.profiler.schedule(skip_first=10, wait=1, warmup=1, active=20),
-        
+
     )
     model = NN(input_size=config.INPUT_SIZE,learning_rate = config.LEARNING_RATE, num_classes=config.NUM_CLASSES)
     # # Loss and optimizer
