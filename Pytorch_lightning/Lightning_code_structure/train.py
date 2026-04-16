@@ -13,6 +13,7 @@ from torchmetrics import Metric
 from model import NN
 from dataset import MnistDataModule
 import config
+from callbacks import MyPrintingCallback, EarlyStopping
 
 
 
@@ -24,7 +25,14 @@ if __name__ == "__main__":
     """Step 5 (next)"""
     dm = MnistDataModule(data_dir=config.DATA_DIR, batch_size=config.BATCH_SIZE, num_workers=config.NUM_WORKERS)
     # Train Network
-    trainer = pl.Trainer(accelerator=config.ACCELERATOR, devices=config.DEVICES, min_epochs=1, max_epochs=3, precision=config.PRECISION)
+    trainer = pl.Trainer(
+        accelerator=config.ACCELERATOR, 
+        devices=config.DEVICES, 
+        min_epochs=1, 
+        max_epochs=config.NUM_EPOCHS, 
+        precision=config.PRECISION,
+        callbacks=[MyPrintingCallback(), EarlyStopping(monitor="val_loss")],
+    )
     trainer.fit(model, dm)
     trainer.validate(model, dm)   # You can use this multiple times
     trainer.test(model, dm)  # but this is only when we complete all things and doing deployment
