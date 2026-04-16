@@ -16,11 +16,13 @@ import config
 from callbacks import MyPrintingCallback, EarlyStopping
 from pytorch_lightning.loggers import TensorBoardLogger #class -- 8
 from pytorch_lightning.profilers import PyTorchProfiler
+from pytorch_lightning.strategies import DeepSpeedStrategy
 
 
 
 if __name__ == "__main__":
     logger = TensorBoardLogger("tb_logs", name="mnist_model_v1")  #class -- 8
+    strategy = DeepSpeedStrategy()
     profiler = PyTorchProfiler( #class -- 9
         on_trace_ready = torch.profiler.tensorboard_trace_handler("tb_logs/profiler0"),
         schedule = torch.profiler.schedule(skip_first=10, wait=1, warmup=1, active=20),
@@ -34,6 +36,7 @@ if __name__ == "__main__":
     dm = MnistDataModule(data_dir=config.DATA_DIR, batch_size=config.BATCH_SIZE, num_workers=config.NUM_WORKERS)
     # Train Network
     trainer = pl.Trainer(
+        strategy=strategy,
         profiler=profiler,
         logger=logger,#class -- 8
         accelerator=config.ACCELERATOR, 

@@ -15,8 +15,8 @@ class NN(pl.LightningModule):
     def __init__(self, input_size, learning_rate, num_classes):
         super().__init__()
         self.lr = learning_rate
-        self.fc1 = nn.Linear(input_size, 50)
-        self.fc2 = nn.Linear(50, num_classes)
+        self.fc1 = nn.Linear(input_size, 1_000_000)
+        self.fc2 = nn.Linear(1_000_000, num_classes)
         self.loss_fn = nn.CrossEntropyLoss()
         self.accuracy = torchmetrics.Accuracy(task="multiclass", num_classes=num_classes)
         self.f1_score = torchmetrics.F1Score(task="multiclass", num_classes=num_classes)
